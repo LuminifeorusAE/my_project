@@ -1,47 +1,54 @@
 import csv
 from datetime import datetime
+from data.crypto_data import CRYPTOCURRENCIES
+from data.stock_data import STOCKS
 
-def scrape_market_data(filename='data/market_data.csv'):
+def scrape_market_data(output_file='data/market_data.csv'):
     """
-    Scrapes market data (simulated here) and saves it to a CSV file.
-    
-    :param filename: Name of the CSV file to save the scraped data.
-    """
-    # Simulated data for demonstration purposes
-    data = [
-        {
-            'Asset Type': 'Crypto',
-            'Name': 'Bitcoin',
-            'Symbol': 'BTC',
-            'Current Price': '37500',
-            'Market Cap': '725B',
-            'Turnover': '5B',
-            'Volume 24h': '45B',
-            'P/E Ratio': None,
-            'Timestamp': datetime.now().isoformat()
-        },
-        {
-            'Asset Type': 'Stock',
-            'Name': 'Tesla',
-            'Symbol': 'TSLA',
-            'Current Price': '240',
-            'Market Cap': '700B',
-            'Turnover': '1B',
-            'Volume 24h': None,
-            'P/E Ratio': '35.2',
-            'Timestamp': datetime.now().isoformat()
-        }
-    ]
-    
-    # Define the headers for the CSV file
-    headers = ['Asset Type', 'Name', 'Symbol', 'Current Price', 
-               'Market Cap', 'Turnover', 'Volume 24h', 'P/E Ratio', 'Timestamp']
+    Scrapes market data for cryptocurrencies and stocks and writes it to a CSV file.
 
-    # Write data to the CSV file
-    with open(filename, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=headers)
+    :param output_file: Name of the CSV file where data will be stored.
+    """
+    # Placeholder for data - In a real scraper, replace this with API calls or web scraping logic
+    market_data = []
+
+    # Process cryptocurrency data
+    for crypto in CRYPTOCURRENCIES:
+        # Example data structure - Replace with real scraping logic
+        market_data.append({
+            "Asset Type": "Crypto",
+            "Name": crypto["name"],
+            "Symbol": crypto["symbol"],
+            "Current Price": "50000",  # Mocked price
+            "Market Cap": "1T",       # Mocked market cap
+            "Turnover": "50B",        # Mocked turnover
+            "Volume 24h": "10B",      # Mocked volume
+            "P/E Ratio": None,
+            "Timestamp": datetime.now().isoformat()
+        })
+
+    # Process stock data
+    for stock in STOCKS:
+        # Example data structure - Replace with real scraping logic
+        market_data.append({
+            "Asset Type": "Stock",
+            "Name": stock["name"],
+            "Symbol": stock["symbol"],
+            "Current Price": "250",  # Mocked price
+            "Market Cap": "2T",     # Mocked market cap
+            "Turnover": "100B",     # Mocked turnover
+            "Volume 24h": None,
+            "P/E Ratio": "20",      # Mocked P/E ratio
+            "Timestamp": datetime.now().isoformat()
+        })
+
+    # Write the collected data to a CSV file
+    with open(output_file, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=[
+            'Asset Type', 'Name', 'Symbol', 'Current Price',
+            'Market Cap', 'Turnover', 'Volume 24h', 'P/E Ratio', 'Timestamp'
+        ])
         writer.writeheader()
-        writer.writerows(data)
+        writer.writerows(market_data)
 
-    print(f"Market data successfully scraped and saved to {filename}")
-
+    print(f"Market data successfully written to {output_file}")

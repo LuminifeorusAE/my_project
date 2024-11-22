@@ -1,19 +1,16 @@
 /my-web-scraper/
 │
-├── main.py                  # Entry point for the script
+├── main.py                        # Entry point for the script
 ├── scraper/
-│   ├── __init__.py          # Makes the directory a package
-│   ├── base_scraper.py      # Base scraper class or functions
-│   ├── headline_scraper.py  # Specific scraper for headlines
-│   ├── utils.py             # Helper functions (e.g., saving files, logging)
+│   ├── __init__.py                # Makes the scraper directory a package
+│   ├── base_scraper.py            # Scraper logic (fetches data and writes to CSV)
+│
+├── analyze/
+│   ├── __init__.py                # Makes the analyze directory a package
+│   ├── data_analysis.py           # Data analysis logic (reads CSV and processes data)
 │
 ├── data/
-│   └── headlines.csv        # Example: Store scraped data
+│   ├── market_data.csv            # Raw scraped data (output of scraper)
+│   └── analyzed_data.csv          # Analyzed data (output of analyzer)
 │
-├── tests/
-│   ├── __init__.py          # Makes the directory a package
-│   ├── test_scraper.py      # Unit tests for scraper functionality
-│
-├── requirements.txt         # List of dependencies (requests, bs4, etc.)
-└── README.md
-
+└── README.md                      # Project documentation

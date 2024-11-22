@@ -1,5 +1,5 @@
 modules = ["python-base-3.13"]
-run = "python3 main.py"
+run = "source venv/bin/activate && python3 main.py"
 [nix]
 channel = "stable-24_05"
 

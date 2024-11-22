@@ -15,4 +15,5 @@
 │   ├── test_scraper.py      # Unit tests for scraper functionality
 │
 ├── requirements.txt         # List of dependencies (requests, bs4, etc.)
-└── README.md                # Project overview and instructions
+└── README.md
+

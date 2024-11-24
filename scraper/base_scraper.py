@@ -1,54 +1,66 @@
-import csv
+# File: scraper/base_scraper.py
+import requests
 from datetime import datetime
 from data.crypto_data import CRYPTOCURRENCIES
 from data.stock_data import STOCKS
+import os
 
-def scrape_market_data(output_file='data/market_data.csv'):
-    """
-    Scrapes market data for cryptocurrencies and stocks and writes it to a CSV file.
+my_secret = os.environ['ALPHAVANTAGE_API']
 
-    :param output_file: Name of the CSV file where data will be stored.
-    """
-    # Placeholder for data - In a real scraper, replace this with API calls or web scraping logic
-    market_data = []
+class MarketScraper:
+    def __init__(self):
+        self.crypto_url = "https://api.coingecko.com/api/v3/simple/price"
+        self.stock_url = "https://www.alphavantage.co/query"
+        self.api_key = my_secret
 
-    # Process cryptocurrency data
-    for crypto in CRYPTOCURRENCIES:
-        # Example data structure - Replace with real scraping logic
-        market_data.append({
-            "Asset Type": "Crypto",
-            "Name": crypto["name"],
-            "Symbol": crypto["symbol"],
-            "Current Price": "50000",  # Mocked price
-            "Market Cap": "1T",       # Mocked market cap
-            "Turnover": "50B",        # Mocked turnover
-            "Volume 24h": "10B",      # Mocked volume
-            "P/E Ratio": None,
-            "Timestamp": datetime.now().isoformat()
-        })
+    def fetch_crypto_data(self):
+                """
+                Fetch real-time cryptocurrency data.
+                """
+                print("CRYPTOCURRENCIES:", CRYPTOCURRENCIES)
+                symbols = ",".join([crypto["id"] for crypto in CRYPTOCURRENCIES if "id" in crypto])
+                print("Constructed symbols:", symbols)
 
-    # Process stock data
-    for stock in STOCKS:
-        # Example data structure - Replace with real scraping logic
-        market_data.append({
-            "Asset Type": "Stock",
-            "Name": stock["name"],
-            "Symbol": stock["symbol"],
-            "Current Price": "250",  # Mocked price
-            "Market Cap": "2T",     # Mocked market cap
-            "Turnover": "100B",     # Mocked turnover
-            "Volume 24h": None,
-            "P/E Ratio": "20",      # Mocked P/E ratio
-            "Timestamp": datetime.now().isoformat()
-        })
+                url = "https://api.coingecko.com/api/v3/simple/price"
+                params = {"ids": symbols, "vs_currencies": "usd", "include_market_cap": "true", "include_24hr_vol": "true"}
 
-    # Write the collected data to a CSV file
-    with open(output_file, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=[
-            'Asset Type', 'Name', 'Symbol', 'Current Price',
-            'Market Cap', 'Turnover', 'Volume 24h', 'P/E Ratio', 'Timestamp'
-        ])
-        writer.writeheader()
-        writer.writerows(market_data)
+                try:
+                    response = requests.get(url, params=params)
+                    response.raise_for_status()
+                    return response.json()
+                except requests.RequestException as e:
+                    print(f"Error fetching cryptocurrency data: {e}")
+                    return {}
 
-    print(f"Market data successfully written to {output_file}")
+
+    def fetch_stock_data(self):
+        market_data = []
+        for stock in STOCKS:
+            params = {
+                "function": "TIME_SERIES_INTRADAY",
+                "symbol": stock["symbol"],
+                "interval": "1min",
+                "apikey": my_secret
+            }
+            try:
+                response = requests.get(self.stock_url, params=params)
+                response.raise_for_status()
+                data = response.json()
+                time_series = data.get("Time Series (1min)", {})
+                if time_series:
+                    latest_time = max(time_series.keys())
+                    latest_data = time_series[latest_time]
+                    market_data.append({
+                        "Asset Type": "Stock",
+                        "Name": stock["name"],
+                        "Symbol": stock["symbol"],
+                        "Current Price": latest_data["1. open"],
+                        "Market Cap": None,
+                        "Turnover": latest_data["5. volume"],
+                        "Volume 24h": None,
+                        "P/E Ratio": stock.get("pe_ratio"),
+                        "Timestamp": datetime.now().isoformat()
+                    })
+            except requests.RequestException as e:
+                print(f"Error fetching stock data for {stock['symbol']}: {e}")
+        return market_data

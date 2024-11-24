@@ -1,8 +1,7 @@
-# List of cryptocurrencies to scrape
 CRYPTOCURRENCIES = [
-    {"name": "Bitcoin", "symbol": "BTC"},
-    {"name": "Ethereum", "symbol": "ETH"},
-    {"name": "Ripple", "symbol": "XRP"},
-    {"name": "Cardano", "symbol": "ADA"},
-    {"name": "Solana", "symbol": "SOL"}
+    {"id": "bitcoin", "name": "Bitcoin", "symbol": "BTC"},
+    {"id": "ethereum", "name": "Ethereum", "symbol": "ETH"},
+    {"id": "ripple", "name": "Ripple", "symbol": "XRP"},
+    {"id": "dogecoin", "name": "Dogecoin", "symbol": "DOGE"},
+    {"id": "solana", "name": "Solana", "symbol": "SOL"}
 ]

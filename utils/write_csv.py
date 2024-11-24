@@ -1,17 +1,18 @@
 # File: utils/write_csv.py
 import csv
+import os
 
 class CSVManager:
-    def __init__(self, filename='market_data.csv'):
-        self.filename = filename
+    def __init__(self, file_path='data/market_data.csv'):
+        self.file_path = file_path
 
     def write_to_csv(self, data):
-        headers = ['Asset Type', 'Name', 'Symbol', 'Current Price', 
-                   'Market Cap', 'Turnover', 'Volume 24h', 'P/E Ratio', 'Timestamp']
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
 
-        with open(self.filename, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=headers)
+        # Write data to the CSV file
+        with open(self.file_path, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=data[0].keys())
             writer.writeheader()
             writer.writerows(data)
-
-        print(f"Data successfully written to {self.filename}")
+            print(f"Data successfully written to {self.file_path}")

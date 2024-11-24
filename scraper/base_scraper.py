@@ -14,24 +14,20 @@ class MarketScraper:
         self.api_key = my_secret
 
     def fetch_crypto_data(self):
-                """
-                Fetch real-time cryptocurrency data.
-                """
-                print("CRYPTOCURRENCIES:", CRYPTOCURRENCIES)
-                symbols = ",".join([crypto["id"] for crypto in CRYPTOCURRENCIES if "id" in crypto])
-                print("Constructed symbols:", symbols)
+        """
+        Fetch real-time cryptocurrency data.
+        """
+        symbols = ",".join([crypto["id"] for crypto in CRYPTOCURRENCIES if "id" in crypto])
+        url = self.crypto_url
+        params = {"ids": symbols, "vs_currencies": "usd", "include_market_cap": "true", "include_24hr_vol": "true"}
 
-                url = "https://api.coingecko.com/api/v3/simple/price"
-                params = {"ids": symbols, "vs_currencies": "usd", "include_market_cap": "true", "include_24hr_vol": "true"}
-
-                try:
-                    response = requests.get(url, params=params)
-                    response.raise_for_status()
-                    return response.json()
-                except requests.RequestException as e:
-                    print(f"Error fetching cryptocurrency data: {e}")
-                    return {}
-
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            print(f"Error fetching cryptocurrency data: {e}")
+            return {}
 
     def fetch_stock_data(self):
         market_data = []
